@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -32,5 +33,31 @@ class EventController extends Controller
         $event = Event::with('categories:name', 'venue')->find($id);
 
         return response()->json(new EventResource($event));
+    }
+
+
+    /**
+     * Store and validate a newly created event
+     * 
+     * @param StoreEventRequest $request
+     * @return JsonResponse
+     */
+    public function store(StoreEventRequest $request): JsonResponse
+    {
+        $validatedData = $request->validated();
+
+        $event = new Event([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'start' => $validatedData['start'],
+            'end' => $validatedData['end'],
+            'venue_id' => $validatedData['venue_id'],
+        ]);
+        
+        $event->save();
+
+        $event->categories()->attach($validatedData['category_ids']);
+
+        return response()->json(new EventResource($event), 201);
     }
 }
