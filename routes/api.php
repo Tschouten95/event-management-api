@@ -24,4 +24,6 @@ Route::group(["prefix" => "event"], function() {
     Route::GET("",[EventController::class, "index"]);
     Route::GET("/{id}",[EventController::class, "show"]);
     Route::POST("", [EventController::class, 'store']);
+    Route::PUT("/{id}", [EventController::class, 'update']);
+    Route::DELETE("/{id}", [EventController::class, 'destroy']);
 });
