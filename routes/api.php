@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(["prefix" => "event"], function() {
     Route::GET("",[EventController::class, "index"]);
     Route::GET("/{id}",[EventController::class, "show"]);
+    Route::POST("", [EventController::class, 'store']);
 });
