@@ -12,15 +12,15 @@ use Illuminate\Database\QueryException;
 
 class CategoryController extends Controller
 {
-    
+
     /**
      * A function that returns all categories
-     * 
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        $categories = Category::select('id','name')->get();
+        $categories = Category::select('id', 'name')->get();
 
         return response()->json($categories);
     }
@@ -28,7 +28,7 @@ class CategoryController extends Controller
 
     /**
      * A function that returns a specific category
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
@@ -44,14 +44,14 @@ class CategoryController extends Controller
 
     /**
      * Store and validate a newly created category
-     * 
+     *
      * @param StoreCategoryRequest $request
      * @return JsonResponse
      */
     public function store(StoreCategoryRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-        
+
         $category = new Category([
             'name' => $validatedData['name']
         ]);
@@ -62,9 +62,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * 
+     * Update the specified category
+     *
      */
-    public function update(UpdateCategoryRequest  $request, $id): JsonResponse
+    public function update(UpdateCategoryRequest $request, $id): JsonResponse
     {
         try {
             $category = Category::findOrFail($id);
@@ -83,7 +84,7 @@ class CategoryController extends Controller
 
     /**
      * Delete the specified category
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
@@ -95,7 +96,7 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Category deleted succesfully']);
         } catch (ModelNotFoundException $exception) {
             return response()->json(['error' => 'Category not found'], 401);
-        } catch (QueryException $exceoption) {
+        } catch (QueryException $exception) {
             return response()->json(['error' => 'Failed to delete category'], 500);
         }
     }

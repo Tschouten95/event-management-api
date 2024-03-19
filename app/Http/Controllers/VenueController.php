@@ -12,10 +12,10 @@ use Illuminate\Database\QueryException;
 
 class VenueController extends Controller
 {
-    
+
     /**
      * A function that returns all venues
-     * 
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
@@ -27,23 +27,24 @@ class VenueController extends Controller
 
     /**
      * A function that returns a specific venue
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
     public function show($id): JsonResponse
     {
         try {
+            $venue = Venue::findorFail($id);
             $venue = Venue::select('id', 'name', 'address')->where('id', $id)->get();
             return response()->json($venue);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Event not found'], 404);
+            return response()->json(['error' => 'Venue not found'], 404);
         }
     }
 
     /**
      * Store and validate a newly created venue
-     * 
+     *
      * @param StoreVenueRequest $request
      * @return JsonResponse
      */
@@ -63,7 +64,7 @@ class VenueController extends Controller
 
     /**
      * Update the specified venue
-     * 
+     *
      * @param UpdateVenueRequest $request
      * @param int $id
      * @return JsonResponse
@@ -88,20 +89,19 @@ class VenueController extends Controller
 
     /**
      * Delete the specified venue
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
     public function destroy($id): JsonResponse
     {
         try {
-            $venue = Venue::findOrFail($id);
+            $venue = Venue::findorFail($id);
+            
             $venue->delete();
-            return response()->json(['message' => 'Venue deleted successfully']);
+            return response()->json(['message' => 'Venue deleted successfully']);     
         } catch (ModelNotFoundException $exception) {
             return response()->json(['error' => 'Venue not found'], 404);
-        } catch (QueryException $exception) {
-            return response()->json(['error' => 'Failed to delete event'], 500);
         }
     }
 }
