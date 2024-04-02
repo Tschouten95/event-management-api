@@ -15,7 +15,7 @@ class TicketSeeder extends Seeder
         $events = \App\Models\Event::all();
 
         $events->each(function ($event) {
-            \App\Models\Ticket::factory(5)->create([
+            \App\Models\Ticket::factory(1)->create([
                 'event_id' => $event->id,
             ]);
         });

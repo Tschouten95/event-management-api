@@ -11,9 +11,8 @@ class VenueFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->company(),
             'address' => fake()->address(),
-            // Define other attributes and their fake data
         ];
     }
 }

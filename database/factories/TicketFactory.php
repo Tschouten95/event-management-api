@@ -18,7 +18,7 @@ class TicketFactory extends Factory
     {
         return [
             'event_id' => 1,
-            'name' => $this->faker->name,
+            'name' => "Basic ticket",
             'price' => $this->faker->randomFloat(2, 0, 100),
             'quantity_available' => $this->faker->numberBetween(1, 100),
         ];
