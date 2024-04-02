@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\VenueController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CategoryController;
 
 /*
@@ -22,26 +23,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group(["prefix" => "event"], function() {
-    Route::GET("",[EventController::class, "index"]);
-    Route::GET("/{id}",[EventController::class, "show"]);
+Route::group(["prefix" => "event"], function () {
+    Route::GET("", [EventController::class, "index"]);
+    Route::GET("/{id}", [EventController::class, "show"]);
     Route::POST("", [EventController::class, 'store']);
     Route::PUT("/{id}", [EventController::class, 'update']);
     Route::DELETE("/{id}", [EventController::class, 'destroy']);
 });
 
-Route::group(["prefix" => "venue"], function() {
-    Route::GET("",[VenueController::class, "index"]);
-    Route::GET("/{id}",[VenueController::class, "show"]);
+Route::group(["prefix" => "venue"], function () {
+    Route::GET("", [VenueController::class, "index"]);
+    Route::GET("/{id}", [VenueController::class, "show"]);
     Route::POST("", [VenueController::class, 'store']);
     Route::PUT("/{id}", [VenueController::class, 'update']);
     Route::DELETE("/{id}", [VenueController::class, 'destroy']);
 });
 
-Route::group(["prefix" => "category"], function() {
-    Route::GET("",[CategoryController::class, "index"]);
-    Route::GET("/{id}",[CategoryController::class, "show"]);
+Route::group(["prefix" => "category"], function () {
+    Route::GET("", [CategoryController::class, "index"]);
+    Route::GET("/{id}", [CategoryController::class, "show"]);
     Route::POST("", [CategoryController::class, 'store']);
     Route::PUT("/{id}", [CategoryController::class, 'update']);
     Route::DELETE("/{id}", [CategoryController::class, 'destroy']);
+});
+
+Route::group(["prefix" => "tickets"], function () {
+    Route::GET("", [TicketController::class, "index"]);
+    Route::GET("/{id}", [TicketController::class, "show"]);
+    Route::POST("", [TicketController::class, "store"]);
+    Route::PUT("/{id}", [TicketController::class, "update"]);
+    Route::DELETE("/{id}", [TicketController::class, "destroy"]);
 });

@@ -10,7 +10,11 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'start', 'end', 'venue_id'
+        'title',
+        'description',
+        'start',
+        'end',
+        'venue_id'
     ];
 
     public function venue()
@@ -21,5 +25,10 @@ class Event extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }
