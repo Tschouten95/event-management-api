@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->string("description");
+            $table->text("description");
             $table->date("start");
             $table->date("end");
             $table->foreignId('venue_id')->references('id')->on('venues');
