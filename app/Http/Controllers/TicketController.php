@@ -9,6 +9,7 @@ use App\Http\Resources\TicketResource;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use Illuminate\Contracts\Support\ValidatedData;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TicketController extends Controller
@@ -53,7 +54,6 @@ class TicketController extends Controller
     public function store(StoreTicketRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-        logger($validatedData);
 
         $ticket = new Ticket([
             'event_id' => $validatedData['event_id'],
@@ -103,13 +103,19 @@ class TicketController extends Controller
      */
     public function destroy($id): JsonResponse
     {
-        try {
-            $ticket = Ticket::findOrFail($id);
 
+            $ticket = $this->findTicketOrFail($id);
             $ticket->delete();
-            return response()->json(["Message" => "Ticket deleted succesfully"]);
+            
+            return response()->json(["Message" => "Ticket deleted succesfully", 204]);
+    }
+
+    private function findTicketOrFail($id): Ticket
+    {
+        try {
+            return Ticket::findOrFail($id);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Ticket not found'], 404);
+            throw new HttpResponseException(response()->json(['error' => 'Ticket not found'], 404));
         }
     }
 }
