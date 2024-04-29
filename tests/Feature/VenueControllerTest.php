@@ -12,7 +12,7 @@ class VenueControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function it_returns_list_of_venues()
+    public function it_returns_a_list_of_venues()
     {
         $response = $this->get('/api/venue');
 
@@ -186,6 +186,29 @@ class VenueControllerTest extends TestCase
 
         $response = $this->json('PUT','/api/venue/' . $venue->id, []);
 
+        $response->assertStatus(422);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'name',
+                'address'
+        ]
+        ]);
+    }
+
+    /** @test */
+    public function it_validates_max_length_of_name_and_address_when_updating_venue()
+    {
+
+        $venue = Venue::factory()->create();
+
+        $data = [
+            'name' => str_repeat('a', 256),
+            'address' => str_repeat('a', 256),
+        ];
+    
+        $response = $this->json('PUT','/api/venue/' . $venue->id, $data);
+    
         $response->assertStatus(422);
         $response->assertJsonStructure([
             'message',

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Resources\TicketResource;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use Exception;
 use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -30,18 +31,14 @@ class TicketController extends Controller
     /**
      * A function that returns a specific ticket
      * 
-     * @param int $id
+     * @param Int $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(Int $id): JsonResponse
     {
-        try {
-            $event = Ticket::with('event')->findOrFail($id);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Ticket not found'], 404);
-        }
+        $ticket = $this->findTicketOrFail($id);
 
-        return response()->json(new TicketResource($event));
+        return response()->json(new TicketResource($ticket));
     }
 
 
@@ -55,12 +52,7 @@ class TicketController extends Controller
     {
         $validatedData = $request->validated();
 
-        $ticket = new Ticket([
-            'event_id' => $validatedData['event_id'],
-            'name' => $validatedData['name'],
-            'price' => $validatedData['price'],
-            'quantity_available' => $validatedData['quantity_available']
-        ]);
+        $ticket = new Ticket($validatedData);
 
         $ticket->save();
 
@@ -76,22 +68,13 @@ class TicketController extends Controller
      */
     public function update(UpdateTicketRequest $request, $id): JsonResponse
     {
-        try {
-            $ticket = Ticket::findOrFail($id);
+            $ticket = $this->findTicketOrFail($id);
 
             $validatedData = $request->validated();
 
-            $ticket->update([
-                'event_id' => $validatedData['event_id'],
-                'name' => $validatedData['name'],
-                'price' => $validatedData['price'],
-                'quantity_available' => $validatedData['quantity_available']
-            ]);
+            $ticket->update($validatedData);
 
             return response()->json(new TicketResource($ticket), 200);
-        } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Ticket not found'], 404);
-        }
     }
 
 
@@ -101,21 +84,22 @@ class TicketController extends Controller
      * @param Int $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(Int $id): JsonResponse
     {
-
             $ticket = $this->findTicketOrFail($id);
             $ticket->delete();
             
-            return response()->json(["Message" => "Ticket deleted succesfully", 204]);
+            return response()->json(["Message" => "Ticket deleted succesfully"], 200);
     }
 
-    private function findTicketOrFail($id): Ticket
+    /**
+     * A function that determines wether the ticket exists in the database and throws a error if it doesnt
+     * 
+     * @param int $id
+     * @return Ticket
+     */
+    private function findTicketOrFail(Int $id): Ticket
     {
-        try {
-            return Ticket::findOrFail($id);
-        } catch (ModelNotFoundException $exception) {
-            throw new HttpResponseException(response()->json(['error' => 'Ticket not found'], 404));
-        }
+        return Ticket::with('event')->findOrFail($id);
     }
 }

@@ -35,6 +35,7 @@ class CategoryController extends Controller
     public function show($id): JsonResponse
     {
         try {
+            $category = Category::findorFail($id);
             $category = Category::select('id', 'name')->where('id', $id)->get();
             return response()->json($category);
         } catch (ModelNotFoundException $exception) {
@@ -70,7 +71,7 @@ class CategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Category not found']);
+            return response()->json(['error' => 'Category not found'], 404);
         }
 
         $validatedData = $request->validated();
@@ -95,7 +96,7 @@ class CategoryController extends Controller
             $category->delete();
             return response()->json(['message' => 'Category deleted succesfully']);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['error' => 'Category not found'], 401);
+            return response()->json(['error' => 'Category not found'], 404);
         } catch (QueryException $exception) {
             return response()->json(['error' => 'Failed to delete category'], 500);
         }
