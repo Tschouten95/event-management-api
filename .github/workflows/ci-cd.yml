@@ -56,3 +56,6 @@ jobs:
 
     - name: Run Migrations
       run: php artisan migrate --force
+
+    - name: Run Tests
+      run: php artisan test --parallel
