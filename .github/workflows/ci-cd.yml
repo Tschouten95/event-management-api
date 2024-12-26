@@ -16,5 +16,11 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: List Repository Files
-      run: ls -la
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.1
+        extensions: mbstring, bcmath, pdo
+
+    - name: Install Composer Dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
