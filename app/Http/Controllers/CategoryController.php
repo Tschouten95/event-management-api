@@ -53,9 +53,7 @@ class CategoryController extends Controller
     {
         $validatedData = $request->validated();
 
-        $category = new Category([
-            'name' => $validatedData['name']
-        ]);
+        $category = new Category($validatedData);
 
         $category->save();
 

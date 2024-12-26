@@ -53,13 +53,7 @@ class EventController extends Controller
     {
         $validatedData = $request->validated();
 
-        $event = new Event([
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'start' => $validatedData['start'],
-            'end' => $validatedData['end'],
-            'venue_id' => $validatedData['venue_id'],
-        ]);
+        $event = new Event($validatedData);
         
         $event->save();
 

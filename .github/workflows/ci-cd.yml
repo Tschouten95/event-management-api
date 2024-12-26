@@ -1,0 +1,17 @@
+name: Laravel CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Ensure Workflow Runs
+      run: echo "The CI/CD workflow has started!"

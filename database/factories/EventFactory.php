@@ -32,7 +32,6 @@ class EventFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Event $event) {
-            // Attach one or more categories to the event
             $categories = Category::inRandomOrder()->limit(rand(1, 3))->get();
             $event->categories()->attach($categories);
         });
